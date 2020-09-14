@@ -9,6 +9,7 @@ from core import savedic, addvalue
 from net.arcface import Arcface
 from net.radam import RAdam
 from core import addvalue, savedic
+import argparse
 
 
 def operate():
@@ -42,16 +43,23 @@ def operate():
 
 
 if __name__ == '__main__':
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--way',type=int,default=4)
+    parser.add_argument('--shot',type=int,default=4)
+    parser.add_argument('--batchsize',type=int,default=256)
+    parser.add_argument('--epochs',type=int,default=250)
+    parser.add_argument('--batch_on_epoch',type=int,default=128)
+    args=parser.parse_args()
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    Way = 2
-    Shot = 2
-    batchsize = 256
-    batch_on_epoch=16
+    Way = args.way
+    Shot = args.shot
+    batchsize = args.batchsize
+    num_epoch = args.batchsize
+    batch_on_epoch=args.batch_on_epoch
     # dataset = omniglot("../data/metric/", ways=Way, shots=Shot, test_shots=Shot, meta_train=True, download=True)
     dataset = cifar_fs("../data/metric/", ways=Way, shots=Shot, test_shots=Shot, meta_train=True, download=True)
     dataloader = BatchMetaDataLoader(dataset, batch_size=batchsize, num_workers=cpu_count())
     lossf = nn.CrossEntropyLoss()
-    num_epoch = 100
     writer = {}
     model = mobilenet_v2().to(device)
     arcface = Arcface()
