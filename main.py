@@ -36,7 +36,7 @@ def operate():
                     optimizer.zero_grad()
                 with torch.no_grad():
                     acc = (output.argmax(-1) == target).sum().float() / len(target)
-                print(f'{phase},{e}:{bch}/{min(batch_on_epoch,len(dataloader))}, {loss.item():.4f}, {acc.item() * 100:.2f}%')
+                print(f'{phase: <5},{e}:{bch}/{min(batch_on_epoch,len(dataloader))}, {loss.item():.4f}, {acc.item() * 100:.2f}%')
 
                 addvalue(writer, f'loss:{phase}', loss.item(), e)
                 addvalue(writer, f'acc:{phase}', acc.item(), e)
